@@ -1,4 +1,14 @@
+
+import os
 import streamlit as st
+
+# Tenta buscar via st.secrets (Cloud); se não achar, busca de os.environ (Local com .env)
+api_key = st.secrets.get("OPENROUTER_API_KEY") or os.environ.get("OPENROUTER_API_KEY")
+
+if not api_key:
+    st.error("Chave OPENROUTER_API_KEY não configurada!")
+    st.stop()
+
 from openai import OpenAI
 import os
 
