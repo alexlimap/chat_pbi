@@ -15,8 +15,7 @@ import os
 # Configuração da página para preencher todo o iframe do Power BI
 st.set_page_config(page_title="Agente Contextual Power BI", layout="wide")
 
-# Inicialização do cliente OpenRouter
-api_key = os.environ.get("OPENROUTER_API_KEY")
+# Inicialização do cliente OpenRouter (usa a api_key resolvida acima: st.secrets ou os.environ)
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
     api_key=api_key

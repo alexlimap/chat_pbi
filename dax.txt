@@ -1,0 +1,66 @@
+URL_Chatbot_Dinamico = 
+// =========================================================================
+// 1. CAPTURA DOS FILTROS ATIVOS
+// =========================================================================
+VAR vAno = 
+    SELECTEDVALUE('#Calendario'[Ano], "Todos os Anos")
+
+VAR vMes = 
+    SELECTEDVALUE('#Calendario'[Nome do Mês], "Todos os Meses")
+
+VAR vCategoria = 
+    IF(
+        ISFILTERED('rec/Base Receita'[origem]),
+        CONCATENATEX(
+            VALUES('rec/Base Receita'[origem]), 
+            'rec/Base Receita'[origem], 
+            ", "
+        ),
+        "Todas as Categorias"
+    )
+
+// =========================================================================
+// 2. CAPTURA DAS MÉTRICAS / KPIS (Tratando símbolos de URL)
+// =========================================================================
+VAR viptu = 
+    FORMAT([IPTU], "R$ #,##0.00")
+
+// Remove o '%' para não corromper a URL e adiciona apenas o número
+VAR vDif = 
+    FORMAT('rec/MedidasReceita'[Diferença receita] * 100, "0.0") & " pct"
+
+VAR vreceita = 
+    FORMAT([receita], "R$ #,##0.00")
+
+// =========================================================================
+// 3. MONTAGEM DA URL COM ENCODING SEGURO
+// =========================================================================
+VAR vUrlBase = "https://chatpbix.onrender.com/?embed=true"
+
+// Tratamos apenas espaço e vírgula de cada parâmetro individualmente (mantendo o '&' intacto)
+VAR vAnoLimpo = SUBSTITUTE(vAno, " ", "%20")
+VAR vMesLimpo = SUBSTITUTE(vMes, " ", "%20")
+VAR vCatLimpo = SUBSTITUTE(SUBSTITUTE(vCategoria, " ", "%20"), ",", "%2C")
+VAR viptuLimpo = SUBSTITUTE(SUBSTITUTE(viptu, " ", "%20"), "$", "%24")
+VAR vDifLimpo = SUBSTITUTE(vDif, " ", "%20")
+VAR vreceitaLimpo = SUBSTITUTE(SUBSTITUTE(vreceita, " ", "%20"), "$", "%24")
+
+VAR vUrlFinal = 
+    vUrlBase & 
+    "&ano=" & vAnoLimpo & 
+    "&mes=" & vMesLimpo & 
+    "&categoria=" & vCatLimpo & 
+    "&iptu=" & viptuLimpo & 
+    "&dif=" & vDifLimpo & 
+    "&receita=" & vreceitaLimpo
+
+// =========================================================================
+// 4. RETORNO DO IFRAME HTML
+// =========================================================================
+RETURN
+"<iframe src='" & vUrlFinal & "' " &
+"width='100%' " &
+"height='700px' " &
+"style='width: 100%; height: 700px; border: none; border-radius: 8px;' " &
+"allow='clipboard-read; clipboard-write'>" &
+"</iframe>"
