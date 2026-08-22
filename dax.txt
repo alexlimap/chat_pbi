@@ -35,7 +35,7 @@ VAR vreceita =
 // =========================================================================
 // 3. MONTAGEM DA URL COM ENCODING SEGURO
 // =========================================================================
-VAR vUrlBase = "https://chatpbix.onrender.com/?embed=true"
+VAR vUrlBase = "https://chat-pbi.onrender.com/?embed=true"
 
 // Tratamos apenas espaço e vírgula de cada parâmetro individualmente (mantendo o '&' intacto)
 VAR vAnoLimpo = SUBSTITUTE(vAno, " ", "%20")

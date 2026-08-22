@@ -2,8 +2,14 @@
 import os
 import streamlit as st
 
-# Tenta buscar via st.secrets (Cloud); se não achar, busca de os.environ (Local com .env)
-api_key = st.secrets.get("OPENROUTER_API_KEY") or os.environ.get("OPENROUTER_API_KEY")
+# Busca a chave: primeiro variável de ambiente (Render); senão secrets.toml (local).
+# st.secrets lança exceção quando não há arquivo de secrets, por isso o try/except.
+api_key = os.environ.get("OPENROUTER_API_KEY")
+if not api_key:
+    try:
+        api_key = st.secrets["OPENROUTER_API_KEY"]
+    except Exception:
+        api_key = None
 
 if not api_key:
     st.error("Chave OPENROUTER_API_KEY não configurada!")
